@@ -35,6 +35,15 @@
     color: var(--muted);
     font-size: 1rem;
   }
+  a.back-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--accent);
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  a.back-link:hover { text-decoration: underline; }
   .container {
     max-width: 1100px;
     margin: 0 auto;
@@ -152,11 +161,12 @@
 <header>
   <h1>Grammar 3 — Lesson Library</h1>
   <p>Click any lesson below to open it full-screen. A resource for teachers.</p>
+  <a class="back-link" href="../index.html" id="backLink" style="display:none;">&larr; Back to Smart Grammar</a>
 </header>
 
 <div class="container">
   <div class="grid" id="grid"></div>
-  <div class="progress-note">38 lessons · use ← → or the arrows to move between them, Esc to close</div>
+  <div class="progress-note" id="progressNote"></div>
 </div>
 
 <div class="viewer" id="viewer">
@@ -169,6 +179,7 @@
 
 <script>
   // Ordered lesson list: a, a(a), b, b(b), c, c(c), then 1 through 18 (with b-variants as available)
+  // Note: Lesson 17 (non-b) is not yet available in the source folder.
   const lessons = [
     { file: "lesson-a.jpg",   label: "Lesson A" },
     { file: "lesson-aa.jpg",  label: "Lesson A(a)" },
@@ -178,6 +189,7 @@
     { file: "lesson-cc.jpg",  label: "Lesson C(c)" },
     { file: "lesson-01.jpg",  label: "Lesson 1" },
     { file: "lesson-01b.jpg", label: "Lesson 1b" },
+    { file: "lesson-02.jpg",  label: "Lesson 2" },
     { file: "lesson-02b.jpg", label: "Lesson 2b" },
     { file: "lesson-03.jpg",  label: "Lesson 3" },
     { file: "lesson-03b.jpg", label: "Lesson 3b" },
@@ -205,6 +217,7 @@
     { file: "lesson-14b.jpg", label: "Lesson 14b" },
     { file: "lesson-15.jpg",  label: "Lesson 15" },
     { file: "lesson-15b.jpg", label: "Lesson 15b" },
+    { file: "lesson-16.jpg",  label: "Lesson 16" },
     { file: "lesson-16b.jpg", label: "Lesson 16b" },
     { file: "lesson-17b.jpg", label: "Lesson 17b" },
     { file: "lesson-18.jpg",  label: "Lesson 18" },
@@ -221,6 +234,15 @@
     card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') openViewer(i); });
     grid.appendChild(card);
   });
+  document.getElementById('progressNote').textContent = `${lessons.length} lessons · use ← → or the arrows to move between them, Esc to close`;
+
+  // Show "back to Smart Grammar" link only when embedded inside the combined app
+  if (window.self !== window.top || document.referrer.includes('index.html') || new URLSearchParams(location.search).get('embedded')) {
+    // no-op, handled below via query param check
+  }
+  if (new URLSearchParams(location.search).get('app') === 'smart-grammar') {
+    document.getElementById('backLink').style.display = 'inline-block';
+  }
 
   const viewer = document.getElementById('viewer');
   const viewerImg = document.getElementById('viewerImg');
